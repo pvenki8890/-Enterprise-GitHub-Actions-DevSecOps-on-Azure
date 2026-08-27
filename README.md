@@ -144,23 +144,27 @@ Selected screenshots provide evidence of the key engineering stages rather than 
 
 Successful GitHub Actions workflow demonstrating automated CI execution.
 
-<p align="center"> <img src="docs/images/13-github-actions-ci-success.png" alt="GitHub Actions CI Success" width="900"> </p>
+<img width="1917" height="1020" alt="13-github-actions-ci-success" src="https://github.com/user-attachments/assets/facc1514-5e37-452f-bdc1-99adb431aa38" />
+
 🔎 Dependency Security
 
 pip-audit completed successfully with no known vulnerabilities found.
 
-<p align="center"> <img src="docs/images/16.png" alt="pip-audit dependency security check" width="900"> </p>
+<img width="961" height="1013" alt="16" src="https://github.com/user-attachments/assets/0ef6b88f-d642-4605-a161-ae90bc81c2c5" />
+
 🛡️ Container Security
 
 Final Trivy security stage completed successfully after remediation of identified dependency issues.
 
-<p align="center"> <img src="docs/images/19.png" alt="Successful Trivy container security scan" width="900"> </p>
+<img width="967" height="975" alt="19" src="https://github.com/user-attachments/assets/07c5dcfb-fb38-430e-abac-4cc01f0db643" />
+
 🚀 Application Verification
 
 The application and health endpoints were successfully verified.
 
 Application	Health
-<img src="docs/images/07a-application-running.png" alt="Application endpoint" width="450">	<img src="docs/images/07b-health-endpoint.png" alt="Health endpoint" width="450">
+
+<img width="977" height="337" alt="07b-health-endpoint png" src="https://github.com/user-attachments/assets/978d4f87-3be3-45e7-87d4-823f13206691" />
 
 ---
 
@@ -176,6 +180,7 @@ azure-github-actions-devsecops/
 │   ├── app.py
 │   ├── requirements.txt
 │   └── tests/
+│       └── test_app.py
 │
 ├── docs/
 │   └── images/
@@ -187,7 +192,6 @@ azure-github-actions-devsecops/
 │
 ├── Dockerfile
 └── README.md
-
 ---
 
 ## 🧰 Technology Stack
