@@ -136,36 +136,57 @@ A lightweight **Python Flask** application with two endpoints.
 
 ---
 
-## 📸 Deployment Evidence
+## 📸 Implementation Evidence
 
-Screenshots captured during implementation provide proof of:
+Selected screenshots provide evidence of the key engineering stages rather than every implementation step.
 
-- ✅ Successful GitHub Actions workflow
-- 🧪 Python tests and dependency audit
-- 🛡️ Trivy container security scan
-- 🔐 Azure OIDC authentication
-- 📦 ACR image push
-- 🔑 Managed Identity and `AcrPull` RBAC configuration
-- ☁️ Azure Container App deployment
-- 🌐 Successful application and health endpoint responses
+⚙️ GitHub Actions CI
+
+Successful GitHub Actions workflow demonstrating automated CI execution.
+
+<p align="center"> <img src="docs/images/13-github-actions-ci-success.png" alt="GitHub Actions CI Success" width="900"> </p>
+🔎 Dependency Security
+
+pip-audit completed successfully with no known vulnerabilities found.
+
+<p align="center"> <img src="docs/images/16.png" alt="pip-audit dependency security check" width="900"> </p>
+🛡️ Container Security
+
+Final Trivy security stage completed successfully after remediation of identified dependency issues.
+
+<p align="center"> <img src="docs/images/19.png" alt="Successful Trivy container security scan" width="900"> </p>
+🚀 Application Verification
+
+The application and health endpoints were successfully verified.
+
+Application	Health
+<img src="docs/images/07a-application-running.png" alt="Application endpoint" width="450">	<img src="docs/images/07b-health-endpoint.png" alt="Health endpoint" width="450">
 
 ---
 
 ## 📁 Project Structure
 
-    azure-github-actions-devsecops/
-    │
-    ├── .github/
-    │   └── workflows/
-    │       └── ci.yml
-    │
-    ├── app/
-    │   ├── app.py
-    │   ├── requirements.txt
-    │   └── tests/
-    │
-    ├── Dockerfile
-    └── README.md
+azure-github-actions-devsecops/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── app/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── tests/
+│
+├── docs/
+│   └── images/
+│       ├── 13-github-actions-ci-success.png
+│       ├── 16.png
+│       ├── 19.png
+│       ├── 07a-application-running.png
+│       └── 07b-health-endpoint.png
+│
+├── Dockerfile
+└── README.md
 
 ---
 
@@ -189,13 +210,34 @@ Screenshots captured during implementation provide proof of:
 
 ## 🏆 Result
 
-The application was successfully:
+The completed workflow provides:
 
-- ✅ Tested through GitHub Actions
-- ✅ Audited for dependency vulnerabilities
-- ✅ Built and scanned as a Docker image
-- ✅ Published to Azure Container Registry
-- ✅ Deployed to Azure Container Apps
-- ✅ Verified through `/` and `/health`
+Source Code
+     ↓
+Automated Testing
+     ↓
+Dependency Security Audit
+     ↓
+Docker Build
+     ↓
+Trivy Security Scan
+     ↓
+GitHub OIDC
+     ↓
+Azure Container Registry
+     ↓
+Managed Identity + AcrPull
+     ↓
+Azure Container Apps
+     ↓
+Application Verification
+Outcome
+✅ Automated CI with GitHub Actions
+✅ Dependency security validation with pip-audit
+✅ Container security scanning with Trivy
+✅ Secure, secretless Azure authentication
+✅ Least-privilege ACR access
+✅ Container image traceability using Git SHA tags
+✅ Successful application deployment and endpoint verification
 
 ---
