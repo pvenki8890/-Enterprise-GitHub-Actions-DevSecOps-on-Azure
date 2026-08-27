@@ -193,6 +193,7 @@ azure-github-actions-devsecops/
 │
 ├── Dockerfile
 └── README.md
+```
 
 ---
 
