@@ -170,6 +170,7 @@ Application	Health
 
 ## 📁 Project Structure
 
+```text
 azure-github-actions-devsecops/
 │
 ├── .github/
@@ -215,34 +216,36 @@ azure-github-actions-devsecops/
 
 ## 🏆 Result
 
-The completed workflow provides:
-
+```text
 Source Code
-     ↓
-Automated Testing
-     ↓
-Dependency Security Audit
-     ↓
-Docker Build
-     ↓
-Trivy Security Scan
-     ↓
-GitHub OIDC
-     ↓
-Azure Container Registry
-     ↓
-Managed Identity + AcrPull
-     ↓
-Azure Container Apps
-     ↓
-Application Verification
-Outcome
-✅ Automated CI with GitHub Actions
-✅ Dependency security validation with pip-audit
-✅ Container security scanning with Trivy
-✅ Secure, secretless Azure authentication
-✅ Least-privilege ACR access
-✅ Container image traceability using Git SHA tags
-✅ Successful application deployment and endpoint verification
+    ↓
+🧪 Automated Testing
+    ↓
+🔎 Dependency Audit
+    ↓
+🐳 Docker Build
+    ↓
+🛡️ Trivy Security Scan
+    ↓
+🔐 GitHub OIDC
+    ↓
+📦 Azure Container Registry
+    ↓
+🔑 Managed Identity + AcrPull
+    ↓
+☁️ Azure Container Apps
+    ↓
+✅ Application Verification
+
+## Outcome
+
+- ✅ Automated CI/CD with GitHub Actions
+- ✅ Dependency security validation with `pip-audit`
+- ✅ Container security scanning with Trivy
+- ✅ Passwordless Azure authentication
+- ✅ Least-privilege ACR access
+- ✅ Git SHA-based container traceability
+- ✅ Successful Azure Container Apps deployment
+- ✅ Verified application and health endpoints
 
 ---
