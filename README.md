@@ -216,25 +216,28 @@ azure-github-actions-devsecops/
 
 ### 🏆 Result
 
-    Source Code
-        ↓
-    🧪 Automated Testing
-        ↓
-    🔎 Dependency Audit
-        ↓
-    🐳 Docker Build
-        ↓
-    🛡️ Trivy Security Scan
-        ↓
-    🔐 GitHub OIDC
-        ↓
-    📦 Azure Container Registry
-        ↓
-    🔑 Managed Identity + AcrPull
-        ↓
-    ☁️ Azure Container Apps
-        ↓
-    ✅ Application Verification
+```text
+Source Code
+    ↓
+🧪 Automated Testing
+    ↓
+🔎 Dependency Audit
+    ↓
+🐳 Docker Build
+    ↓
+🛡️ Trivy Security Scan
+    ↓
+🔐 GitHub OIDC
+    ↓
+📦 Azure Container Registry
+    ↓
+🔑 Managed Identity + AcrPull
+    ↓
+☁️ Azure Container Apps
+    ↓
+✅ Application Verification
+
+---
 
 ### Outcome
 
