@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   test:
     name: Run Python Tests
@@ -32,7 +36,8 @@ jobs:
         run: python -m pip_audit -r app/requirements.txt
 
   container-security:
-    name: Container Security Scan
+    name: Container Security Scan and Push
+    needs: test
     runs-on: ubuntu-24.04
 
     steps:
@@ -60,3 +65,24 @@ jobs:
           vuln-type: os,library
           severity: CRITICAL,HIGH
           skip-files: /usr/local/lib/python3.13/site-packages/pip/_vendor/bom.cdx.json
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name pvgithubdevsecopsacr2026
+
+      - name: Tag Docker image
+        run: |
+          docker tag \
+            azure-github-actions-devsecops:${{ github.sha }} \
+            pvgithubdevsecopsacr2026.azurecr.io/azure-github-actions-devsecops:${{ github.sha }}
+
+      - name: Push Docker image to ACR
+        run: |
+          docker push \
+            pvgithubdevsecopsacr2026.azurecr.io/azure-github-actions-devsecops:${{ github.sha }}
