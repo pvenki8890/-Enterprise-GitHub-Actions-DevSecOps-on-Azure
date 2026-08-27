@@ -376,26 +376,6 @@ Screenshots captured during implementation provide visual proof of the major pro
 
 ---
 
-## Cost-Conscious Design
-
-The project is designed as a **portfolio/lab implementation** rather than a production-scale workload.
-
-The final architecture uses:
-
-- Azure Container Registry Basic SKU
-- Azure Container Apps Consumption workload
-- Minimum replicas: `0`
-- Maximum replicas: `1`
-- No dedicated virtual machines
-- No unnecessary Log Analytics workspace
-- No unnecessary supporting infrastructure
-
-This keeps the architecture simple while demonstrating the core DevSecOps workflow.
-
-> Azure pricing can change. Always verify current costs in the Azure Portal before running workloads for extended periods.
-
----
-
 ## Project Result
 
 The completed workflow is:
