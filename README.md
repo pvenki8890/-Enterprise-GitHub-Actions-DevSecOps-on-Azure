@@ -1,184 +1,425 @@
-# 🛡️ Azure GitHub Actions DevSecOps
+# Azure GitHub Actions DevSecOps
 
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
-[![Docker](https://img.shields.io/badge/Container-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Microsoft Azure](https://img.shields.io/badge/Cloud-Microsoft%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/)
-[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Security: Trivy](https://img.shields.io/badge/Security-Trivy%20Scan-1904DA?style=for-the-badge&logo=aqua&logoColor=white)](https://aquasecurity.github.io/trivy/)
-[![Security: OIDC](https://img.shields.io/badge/Auth-OIDC%20Federated-success?style=for-the-badge&logo=openid&logoColor=white)](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation)
+> Secure and cost-conscious CI/CD pipeline for a containerized Python application using GitHub Actions, Docker, Trivy, Azure Container Registry, and Azure Container Apps.
 
-Enterprise-grade, cost-conscious CI/CD and DevSecOps container delivery workflow for a Python Flask application deployed to **Azure Container Apps** using **GitHub Actions**, **OIDC Workload Identity Federation**, and automated security scanning gates.
-
----
-
-## 📑 Table of Contents
-
-- [Project Overview](#-project-overview)
-- [Architecture](#-architecture)
-- [DevSecOps Security Controls](#-devsecops-security-controls)
-- [CI/CD Pipeline Stages](#-cicd-pipeline-stages)
-- [Azure Infrastructure](#-azure-infrastructure)
-- [Application Endpoints](#-application-endpoints)
-- [Docker Configuration](#-docker-configuration)
-- [Repository Structure](#-repository-structure)
-- [Local Development & Testing](#-local-development--testing)
-- [Docker Execution](#-docker-execution)
-- [Evidence & Verification](#-evidence--verification)
-- [Cost-Conscious Design](#-cost-conscious-design)
-- [Technologies Used](#-technologies-used)
-- [Project Outcome](#-project-outcome)
+<p align="center">
+  <img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions">
+  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Azure-Container%20Apps-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure Container Apps">
+  <img src="https://img.shields.io/badge/DevSecOps-Trivy%20%7C%20pip--audit-DC3545?style=for-the-badge" alt="DevSecOps">
+</p>
 
 ---
 
-## 🎯 Project Overview
+## Overview
 
-The objective of this project is to implement a practical, production-ready DevSecOps pipeline using GitHub Actions and Microsoft Azure.
+This project implements an end-to-end **DevSecOps workflow** for a Python Flask application.
 
-### 🌟 Key Highlights
-- 🧪 **Automated Testing**: Unit and functional testing via `pytest`.
-- 🔍 **Dependency Vulnerability Auditing**: Software Composition Analysis (SCA) with `pip-audit`.
-- 🐳 **Immutable Container Packaging**: Commit SHA tagging strategy (`${{ github.sha }}`) preventing mutable `latest` tag risks.
-- 🛡️ **Container Security Scanning**: Shift-left CVE scanning via `Trivy` configured to block high/critical vulnerabilities.
-- 🔑 **Passwordless Authentication**: GitHub Actions OIDC integration with Azure Entra ID (zero persistent secrets).
-- 📦 **Private Registry Hardening**: Azure Container Registry (ACR) with admin credentials disabled.
-- 🔐 **Least-Privilege Authorization**: System-Assigned Managed Identity with scoped `AcrPull` role.
-- 🚀 **Serverless Microservices**: Azure Container Apps (Consumption profile) with automated scale-to-zero capability.
-- 💰 **Cost-Conscious Cloud Footprint**: Minimal resource footprint without idle compute overhead.
+The solution combines automated testing, dependency security auditing, container vulnerability scanning, secure Azure authentication, container image publishing, and Azure Container Apps deployment.
+
+### Key Highlights
+
+- Automated CI with GitHub Actions
+- Python testing with `pytest`
+- Dependency security auditing with `pip-audit`
+- Docker containerization
+- Trivy vulnerability scanning
+- GitHub OIDC authentication to Azure
+- Azure Container Registry with admin authentication disabled
+- System-assigned Managed Identity
+- Least-privilege `AcrPull` RBAC access
+- Immutable Git commit SHA image tagging
+- Azure Container Apps deployment
+- Application and health endpoint verification
+- Cost-conscious Consumption-based architecture
 
 ---
 
-## 🏛️ Architecture
+## Architecture
 
-```text
- ┌─────────────────────────────────────────────────────────┐
- │                   Developer / Git Push                  │
- └────────────────────────────┬────────────────────────────┘
-                              │
-                              ▼
- ┌─────────────────────────────────────────────────────────┐
- │               GitHub Actions CI/CD Pipeline             │
- │                                                         │
- │  ┌─────────────────────┐       ┌─────────────────────┐  │
- │  │    Python Tests     │  and  │   pip-audit (SCA)   │  │
- │  │      (pytest)       │       │  Dependency Check   │  │
- │  └──────────┬──────────┘       └──────────┬──────────┘  │
- │             └──────────────┬──────────────┘             │
- │                            ▼                            │
- │              ┌───────────────────────────┐              │
- │              │   Docker Container Build  │              │
- │              └─────────────┬─────────────┘              │
- │                            ▼                            │
- │              ┌───────────────────────────┐              │
- │              │  Trivy Security Scanning  │              │
- │              │  (Fail on HIGH/CRITICAL)  │              │
- │              └─────────────┬─────────────┘              │
- │                            ▼                            │
- │              ┌───────────────────────────┐              │
- │              │ GitHub OIDC Authentication│              │
- │              │     (Azure Entra ID)      │              │
- │              └─────────────┬─────────────┘              │
- └────────────────────────────┼────────────────────────────┘
-                              │
-                              ▼ (Push immutable image: ${{ github.sha }})
- ┌─────────────────────────────────────────────────────────┐
- │             Azure Container Registry (ACR)              │
- │             (Admin authentication disabled)             │
- └────────────────────────────┬────────────────────────────┘
-                              │
-                              │ AcrPull (Managed Identity)
-                              ▼
- ┌─────────────────────────────────────────────────────────┐
- │             Azure Container Apps (Consumption)          │
- │                                                         │
- │    ┌──────────────────────────────────────────────┐     │
- │    │           Flask Python Application           │     │
- │    │       GET /               GET /health        │     │
- │    │   (Status: Running)    (Status: Healthy)     │     │
- │    └──────────────────────────────────────────────┘     │
- └─────────────────────────────────────────────────────────┘
+    Developer
+        │
+        │ git push
+        ▼
+    ┌─────────────────────┐
+    │  GitHub Repository  │
+    └──────────┬──────────┘
+               │
+               ▼
+    ┌─────────────────────┐
+    │   GitHub Actions    │
+    └──────────┬──────────┘
+               │
+        ┌──────┴──────┐
+        │             │
+        ▼             ▼
+    pytest        pip-audit
+        │             │
+        └──────┬──────┘
+               │
+               ▼
+         Docker Build
+               │
+               ▼
+         Trivy Security Scan
+               │
+          Security Gate
+               │
+               ▼
+        GitHub OIDC → Azure
+               │
+               ▼
+    ┌─────────────────────┐
+    │ Azure Container     │
+    │ Registry (ACR)      │
+    └──────────┬──────────┘
+               │
+           AcrPull
+               │
+               ▼
+    ┌─────────────────────┐
+    │ Azure Container     │
+    │ Apps                │
+    │ Consumption         │
+    └──────────┬──────────┘
+               │
+               ▼
+       Flask Application
+          │          │
+          ▼          ▼
+         `/`      `/health`
 
-🔒 DevSecOps Security ControlsSecurity ControlImplementation MechanismSecurity ImpactShift-Left Dependency SCApip-audit -r app/requirements.txtIdentifies vulnerable Python packages before container build.Container CVE ScanningAqua Security TrivyScans OS and Python runtime packages for HIGH & CRITICAL vulnerabilities.Passwordless AuthOpenID Connect (OIDC)Eliminates long-lived Azure service principal secrets in GitHub Actions.Artifact ImmutabilityGit Commit SHA TaggingPrevents supply-chain drift and ensures complete build traceability.Registry HardeningACR RBAC (Admin Disabled)Blocks local account access and enforces Azure Entra ID authentication.Workload IdentitySystem-Assigned Managed IdentityGrants Azure Container Apps least-privilege AcrPull permissions.⚙️ CI/CD Pipeline StagesThe workflow executes automatically on every push to the main branch via .github/workflows/ci.yml:Plaintextci.yml
- ├── 🧪 Job 1: test
- │    ├── 📥 Checkout repository
- │    ├── 🐍 Set up Python 3.13
- │    ├── 📦 Install application dependencies
- │    ├── 🔬 Execute automated tests (pytest app/tests)
- │    └── 🛡️ Audit Python dependencies (pip-audit -r app/requirements.txt)
- │
- └── 🛡️ Job 2: container-security (depends on: test)
-      ├── 📥 Checkout repository
-      ├── 🐳 Build Docker image (azure-github-actions-devsecops:${{ github.sha }})
-      ├── 🔍 Execute Trivy vulnerability scan
-      ├── 🔑 Authenticate to Azure using OIDC (id-token: write)
-      ├── 📦 Authenticate against Azure Container Registry (ACR)
-      ├── 🏷️ Tag Docker image with ACR login server
-      └── 🚀 Push immutable image to ACR
-☁️ Azure InfrastructureResourceResource NameSKU / Workload ProfilePurpose & ConfigurationAzure Container Registrypvgithubdevsecopsacr2026BasicSecure container store (Admin user: Disabled).Container Apps Environmentcae-azure-github-actions-devsecopsConsumptionServerless execution boundary in Southeast Asia.Azure Container Appca-gha-devsecopsConsumptionHosts the containerized Flask app (0 to 1 auto-scaling).🏷️ Immutable Image Tagging & TraceabilityImages are tagged strictly with the Git commit SHA rather than mutable latest tags:Plaintextpvgithubdevsecopsacr2026.azurecr.io/azure-github-actions-devsecops:7bc7e14d05c57bb6ffc5cfb2508a80e4af05d960
-This guarantees end-to-end traceability across the entire deployment lifecycle:$$\text{Git Commit SHA} \longrightarrow \text{Docker Image} \longrightarrow \text{Azure Container Registry} \longrightarrow \text{Azure Container Apps}$$🌐 Application Endpoints1. Root Application Endpoint (/)Bashcurl.exe https://<container-app-fqdn>/
-JSON{
-  "application": "Azure GitHub Actions DevSecOps",
-  "message": "Application deployed successfully!",
-  "status": "running"
-}
-2. Service Health Endpoint (/health)Bashcurl.exe https://<container-app-fqdn>/health
-JSON{
-  "status": "healthy"
-}
-🐳 Docker ConfigurationThe application uses an optimized python:3.13-slim base image:🪶 Minimal Footprint: Uses slim OS image to minimize attack surface.🔄 OS Patching: Updates core OS packages on build.⚡ Optimized Runtime: Configured with PYTHONUNBUFFERED=1.🚪 Port Binding: Exposes and serves traffic on 0.0.0.0:5000.📁 Repository StructurePlaintextazure-github-actions-devsecops/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml               # GitHub Actions CI/CD & DevSecOps workflow
-│
-├── app/
-│   ├── app.py                  # Python Flask application
-│   ├── requirements.txt        # Python dependency manifest
-│   └── tests/                  # Automated pytest test suites
-│
-├── .dockerignore               # Docker build exclusions
-├── .gitignore                  # Git tracking exclusions
-├── Dockerfile                  # Lean Python 3.13 slim container definition
-└── README.md                   # Project documentation
-💻 Local Development & Testing1. Set Up Virtual EnvironmentBash# Create virtual environment
-python -m venv .venv
+---
 
-# Activate on Windows PowerShell
-.\.venv\Scripts\Activate.ps1
+## CI/CD Pipeline
 
-# Activate on macOS / Linux
-source .venv/bin/activate
-2. Install & Audit DependenciesBashpython -m pip install --upgrade pip
-python -m pip install -r app/requirements.txt
-python -m pip_audit -r app/requirements.txt
-3. Run Test SuiteBashpython -m pytest app/tests
-4. Run Application LocallyBashpython app/app.py
-# Application accessible at: http://localhost:5000 and http://localhost:5000/health
-🐳 Docker ExecutionBuild Docker ImageBashdocker build -t azure-github-actions-devsecops:local .
-Run Docker ContainerBashdocker run --rm -p 5000:5000 azure-github-actions-devsecops:local
-Verify Local ContainerBashcurl.exe http://localhost:5000/
-curl.exe http://localhost:5000/health
-📸 Evidence & VerificationVisual proof and audit logs were captured across the end-to-end implementation:GitHub Actions: Successful workflow runs, test executions, pip-audit checks, and Trivy scan logs.Azure Security & Registry: Passwordless OIDC tokens, ACR repository tags, and disabled admin credentials.Azure Identity & Compute: System-assigned Managed Identity, AcrPull RBAC assignment, and active Container App revisions.Application Validation: Public curl verification of JSON payloads on / and /health.💡 Cost-Conscious DesignDesigned to avoid unnecessary infrastructure expenses during portfolio demonstrations:📉 ACR Basic SKU: Minimal registry storage overhead.⏱️ Scale-to-Zero (minReplicas: 0): Azure Container Apps shuts down compute when idle.🚫 Zero Dedicated VMs: No continuous compute cluster overhead.🧹 No Idle Analytics: Avoided unnecessary dedicated Log Analytics workspaces.🛠️ Technologies UsedRuntime & Framework: Python 3.13, FlaskTesting & Quality: pytest, pip-auditContainer Engine: DockerSecurity & Vulnerability Analysis: Aqua Security TrivyCI/CD Automation & Identity: GitHub Actions, OpenID Connect (OIDC)Cloud Infrastructure: Microsoft Azure, Azure Container Apps, Azure Container Registry (ACR), Azure Managed Identity, Azure RBAC🏆 Project OutcomePlaintext Source Code 
-      │
-      ▼
- Automated Python Tests (pytest)
-      │
-      ▼
- Dependency SCA Audit (pip-audit)
-      │
-      ▼
- Container Build & Trivy CVE Gate
-      │
-      ▼
- Passwordless GitHub OIDC Auth
-      │
-      ▼
- Azure Container Registry (Immutable SHA Tag)
-      │
-      ▼
- Managed Identity + AcrPull RBAC
-      │
-      ▼
- Azure Container Apps (Consumption)
-      │
-      ▼
- 🚀 Validated Live Flask Application
+The workflow is triggered by a push to the `main` branch.
+
+| Stage | Technology | Purpose |
+|:---|:---|:---|
+| **Testing** | pytest | Validate application functionality |
+| **Dependency Audit** | pip-audit | Detect vulnerable Python dependencies |
+| **Container Build** | Docker | Package the application |
+| **Security Scan** | Trivy | Scan the image for vulnerabilities |
+| **Authentication** | GitHub OIDC | Secure passwordless Azure authentication |
+| **Registry** | Azure Container Registry | Store the validated image |
+| **Authorization** | Azure RBAC | Provide scoped `AcrPull` access |
+| **Runtime** | Azure Container Apps | Run the application |
+
+### Pipeline Flow
+
+    Code Push
+        ↓
+    Python Tests
+        ↓
+    Dependency Audit
+        ↓
+    Docker Build
+        ↓
+    Trivy Security Scan
+        ↓
+    GitHub OIDC Authentication
+        ↓
+    Push Image to ACR
+        ↓
+    Azure Container Apps
+        ↓
+    Application Verification
+
+The `container-security` job runs only after the `test` job succeeds.
+
+---
+
+## Security
+
+Security is integrated into the CI/CD workflow rather than being treated as a separate final step.
+
+### Dependency Security
+
+`pip-audit` checks the Python dependencies for known vulnerabilities before the container image is published.
+
+### Container Security
+
+Trivy scans the Docker image for:
+
+- Operating system vulnerabilities
+- Application/library vulnerabilities
+- HIGH severity vulnerabilities
+- CRITICAL severity vulnerabilities
+
+The workflow is configured to fail when applicable HIGH or CRITICAL vulnerabilities are detected.
+
+### GitHub OIDC
+
+GitHub Actions authenticates to Azure using **OpenID Connect (OIDC)** instead of storing a long-lived Azure client secret.
+
+    GitHub Actions
+          │
+          │ OIDC Token
+          ▼
+      Azure Entra ID
+          │
+          ▼
+    Federated Identity
+          │
+          ▼
+      Azure Resources
+
+### Managed Identity
+
+The Azure Container App uses a **system-assigned Managed Identity**.
+
+The identity is granted the:
+
+    AcrPull
+
+role at the Azure Container Registry scope.
+
+This allows the Container App to pull the private image without storing registry credentials.
+
+### Immutable Image Tags
+
+Container images are tagged using the Git commit SHA.
+
+    pvgithubdevsecopsacr2026.azurecr.io/azure-github-actions-devsecops:<commit-sha>
+
+This provides traceability:
+
+    Git Commit
+        ↓
+    Docker Image
+        ↓
+    Azure Container Registry
+        ↓
+    Azure Container Apps
+
+---
+
+## Azure Infrastructure
+
+The completed implementation uses three primary Azure resources.
+
+| Resource | Purpose |
+|:---|:---|
+| **Azure Container Registry** | Stores the container image |
+| **Container Apps Environment** | Provides the hosting environment |
+| **Azure Container App** | Runs the Flask application |
+
+### Azure Container Registry
+
+| Property | Value |
+|:---|:---|
+| **Name** | `pvgithubdevsecopsacr2026` |
+| **Login Server** | `pvgithubdevsecopsacr2026.azurecr.io` |
+| **SKU** | Basic |
+| **Admin Authentication** | Disabled |
+
+### Container Apps Environment
+
+| Property | Value |
+|:---|:---|
+| **Name** | `cae-azure-github-actions-devsecops` |
+| **Region** | Southeast Asia |
+| **Workload Profile** | Consumption |
+| **Application Logs** | None |
+
+### Container App
+
+| Property | Value |
+|:---|:---|
+| **Name** | `ca-gha-devsecops` |
+| **Region** | Southeast Asia |
+| **Revision Mode** | Single |
+| **Minimum Replicas** | 0 |
+| **Maximum Replicas** | 1 |
+| **Target Port** | 5000 |
+| **Ingress** | External |
+
+---
+
+## Application
+
+The project contains a lightweight Python Flask application.
+
+### Application Endpoint
+
+**GET `/`**
+
+    {
+      "application": "Azure GitHub Actions DevSecOps",
+      "status": "running",
+      "message": "Application deployed successfully!"
+    }
+
+### Health Endpoint
+
+**GET `/health`**
+
+    {
+      "status": "healthy"
+    }
+
+Both endpoints were successfully verified against the deployed Azure Container App.
+
+---
+
+## Deployment Verification
+
+The final deployment was verified through the public Azure Container Apps endpoint.
+
+### Application Verification
+
+    GET /
+
+Response:
+
+    {
+      "application": "Azure GitHub Actions DevSecOps",
+      "status": "running",
+      "message": "Application deployed successfully!"
+    }
+
+### Health Verification
+
+    GET /health
+
+Response:
+
+    {
+      "status": "healthy"
+    }
+
+These successful responses confirm that the application container was running correctly on Azure Container Apps.
+
+---
+
+## Evidence
+
+Screenshots captured during implementation provide visual proof of the major project stages.
+
+### GitHub Actions
+
+- Successful CI workflow
+- Python test execution
+- Dependency security audit
+- Docker image build
+- Successful Trivy security scan
+- Azure authentication
+- Successful ACR image push
+
+### Azure
+
+- Azure Container Registry configuration
+- Container Apps Environment
+- Container App configuration
+- System-assigned Managed Identity
+- `AcrPull` role assignment
+- Running container revision
+- Deployed container image
+
+### Application
+
+- `/` application response
+- `/health` health response
+
+---
+
+## Project Structure
+
+    azure-github-actions-devsecops/
+    │
+    ├── .github/
+    │   └── workflows/
+    │       └── ci.yml
+    │
+    ├── app/
+    │   ├── app.py
+    │   ├── requirements.txt
+    │   └── tests/
+    │
+    ├── Dockerfile
+    └── README.md
+
+---
+
+## Technology Stack
+
+| Category | Technologies |
+|:---|:---|
+| **Application** | Python 3.13, Flask |
+| **CI/CD** | GitHub Actions, GitHub OIDC |
+| **Testing** | pytest |
+| **Dependency Security** | pip-audit |
+| **Container Security** | Trivy |
+| **Containerization** | Docker |
+| **Azure Registry** | Azure Container Registry |
+| **Azure Runtime** | Azure Container Apps |
+| **Identity** | Azure Managed Identity |
+| **Authorization** | Azure RBAC |
+
+---
+
+## DevSecOps Practices
+
+| Practice | Implementation |
+|:---|:---|
+| **Automated Testing** | pytest in GitHub Actions |
+| **Dependency Security** | pip-audit |
+| **Container Security** | Trivy |
+| **Security Gates** | HIGH/CRITICAL vulnerability checks |
+| **Cloud Authentication** | GitHub OIDC |
+| **Least Privilege** | Scoped Azure RBAC |
+| **Secretless ACR Access** | Managed Identity |
+| **Artifact Traceability** | Git SHA image tags |
+| **Cost Control** | Consumption + 0–1 replicas |
+
+---
+
+## Cost-Conscious Design
+
+The project is designed as a **portfolio/lab implementation** rather than a production-scale workload.
+
+The final architecture uses:
+
+- Azure Container Registry Basic SKU
+- Azure Container Apps Consumption workload
+- Minimum replicas: `0`
+- Maximum replicas: `1`
+- No dedicated virtual machines
+- No unnecessary Log Analytics workspace
+- No unnecessary supporting infrastructure
+
+This keeps the architecture simple while demonstrating the core DevSecOps workflow.
+
+> Azure pricing can change. Always verify current costs in the Azure Portal before running workloads for extended periods.
+
+---
+
+## Project Result
+
+The completed workflow is:
+
+    Source
+      ↓
+    Test
+      ↓
+    Dependency Audit
+      ↓
+    Docker Build
+      ↓
+    Trivy Scan
+      ↓
+    GitHub OIDC
+      ↓
+    Azure Container Registry
+      ↓
+    Managed Identity + AcrPull
+      ↓
+    Azure Container Apps
+      ↓
+    Application Verification
+
+**Result:** The Python application was successfully tested, security-scanned, published to Azure Container Registry, deployed to Azure Container Apps, and verified through both the application and health endpoints.
+
+---
