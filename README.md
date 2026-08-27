@@ -1,4 +1,4 @@
-# 🚀 Enterprise GitHub Actions DevSecOps
+# 🚀 # 🚀 Enterprise GitHub Actions DevSecOps on Azure
 
 > 🔐 End-to-end DevSecOps pipeline for a containerized Python Flask application using GitHub Actions, Docker, Trivy, Azure Container Registry, and Azure Container Apps.
 
