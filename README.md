@@ -193,6 +193,7 @@ azure-github-actions-devsecops/
 │
 ├── Dockerfile
 └── README.md
+
 ---
 
 ## 🧰 Technology Stack
@@ -235,9 +236,11 @@ Source Code
 ☁️ Azure Container Apps
     ↓
 ✅ Application Verification
+```
+
 ---
 
-### Outcome
+## 🎯 Outcome
 
 - ✅ Automated CI/CD with GitHub Actions
 - ✅ Dependency security validation with `pip-audit`
