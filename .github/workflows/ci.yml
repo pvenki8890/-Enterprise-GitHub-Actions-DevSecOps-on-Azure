@@ -40,7 +40,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t azure-github-actions-devsecops:${{ github.sha }} .
+        run: docker build --no-cache -t azure-github-actions-devsecops:${{ github.sha }} .
+
+      - name: Verify container dependencies
+        run: |
+          echo "=== Installed setuptools ==="
+          docker run --rm azure-github-actions-devsecops:${{ github.sha }} python -m pip show setuptools
+
+          echo "=== Checking for msgpack ==="
+          docker run --rm azure-github-actions-devsecops:${{ github.sha }} python -m pip show msgpack || true
 
       - name: Scan container image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
