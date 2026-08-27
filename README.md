@@ -192,6 +192,7 @@ azure-github-actions-devsecops/
 │
 ├── Dockerfile
 └── README.md
+
 ---
 
 ## 🧰 Technology Stack
