@@ -193,10 +193,9 @@ azure-github-actions-devsecops/
 │
 ├── Dockerfile
 └── README.md
-
 ---
 
-### 🧰 Technology Stack
+## 🧰 Technology Stack
 
 | Category | Technologies |
 |:---|:---|
@@ -214,7 +213,7 @@ azure-github-actions-devsecops/
 
 ---
 
-### 🏆 Result
+## 🏆 Result
 
 ```text
 Source Code
@@ -236,7 +235,6 @@ Source Code
 ☁️ Azure Container Apps
     ↓
 ✅ Application Verification
-
 ---
 
 ### Outcome
