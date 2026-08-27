@@ -196,7 +196,7 @@ azure-github-actions-devsecops/
 
 ---
 
-## 🧰 Technology Stack
+### 🧰 Technology Stack
 
 | Category | Technologies |
 |:---|:---|
@@ -214,30 +214,29 @@ azure-github-actions-devsecops/
 
 ---
 
-## 🏆 Result
+### 🏆 Result
 
-```text
-Source Code
-    ↓
-🧪 Automated Testing
-    ↓
-🔎 Dependency Audit
-    ↓
-🐳 Docker Build
-    ↓
-🛡️ Trivy Security Scan
-    ↓
-🔐 GitHub OIDC
-    ↓
-📦 Azure Container Registry
-    ↓
-🔑 Managed Identity + AcrPull
-    ↓
-☁️ Azure Container Apps
-    ↓
-✅ Application Verification
+    Source Code
+        ↓
+    🧪 Automated Testing
+        ↓
+    🔎 Dependency Audit
+        ↓
+    🐳 Docker Build
+        ↓
+    🛡️ Trivy Security Scan
+        ↓
+    🔐 GitHub OIDC
+        ↓
+    📦 Azure Container Registry
+        ↓
+    🔑 Managed Identity + AcrPull
+        ↓
+    ☁️ Azure Container Apps
+        ↓
+    ✅ Application Verification
 
-## Outcome
+### Outcome
 
 - ✅ Automated CI/CD with GitHub Actions
 - ✅ Dependency security validation with `pip-audit`
